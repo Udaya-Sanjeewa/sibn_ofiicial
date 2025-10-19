@@ -22,8 +22,21 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
+  DialogFooter,
 } from '@/components/ui/dialog';
-import { Search, Package, Eye, ChevronRight, Filter } from 'lucide-react';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
+import { Search, Package, Eye, ChevronRight, Filter, Clock, AlertCircle } from 'lucide-react';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
 
@@ -57,6 +70,15 @@ interface Order {
   sellerTotal: number;
 }
 
+interface OrderStatusHistory {
+  id: string;
+  old_status: string;
+  new_status: string;
+  changed_by_role: string;
+  notes: string | null;
+  created_at: string;
+}
+
 export default function SellerOrdersPage() {
   const { user, isLoading } = useAuth();
   const router = useRouter();
@@ -66,6 +88,12 @@ export default function SellerOrdersPage() {
   const [isLoadingOrders, setIsLoadingOrders] = useState(true);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [orderHistory, setOrderHistory] = useState<OrderStatusHistory[]>([]);
+  const [isLoadingHistory, setIsLoadingHistory] = useState(false);
+  const [newStatus, setNewStatus] = useState<string>('');
+  const [statusNotes, setStatusNotes] = useState('');
+  const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
+  const [showStatusDialog, setShowStatusDialog] = useState(false);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -162,9 +190,78 @@ export default function SellerOrdersPage() {
     return matchesSearch && matchesStatus;
   });
 
-  const viewOrderDetails = (order: Order) => {
+  const viewOrderDetails = async (order: Order) => {
     setSelectedOrder(order);
     setIsDialogOpen(true);
+    await loadOrderHistory(order.id);
+  };
+
+  const loadOrderHistory = async (orderId: string) => {
+    setIsLoadingHistory(true);
+    const { data, error } = await supabase
+      .from('order_status_history')
+      .select('*')
+      .eq('order_id', orderId)
+      .order('created_at', { ascending: false });
+
+    if (!error && data) {
+      setOrderHistory(data);
+    }
+    setIsLoadingHistory(false);
+  };
+
+  const handleStatusChange = (order: Order, status: string) => {
+    setSelectedOrder(order);
+    setNewStatus(status);
+    setStatusNotes('');
+    setShowStatusDialog(true);
+  };
+
+  const confirmStatusChange = async () => {
+    if (!selectedOrder || !newStatus) return;
+
+    setIsUpdatingStatus(true);
+
+    try {
+      const { error } = await supabase
+        .from('orders')
+        .update({ status: newStatus })
+        .eq('id', selectedOrder.id);
+
+      if (error) throw error;
+
+      toast.success(`Order status updated to ${newStatus}`);
+      setShowStatusDialog(false);
+      await loadOrders();
+
+      if (isDialogOpen) {
+        await loadOrderHistory(selectedOrder.id);
+      }
+    } catch (error: any) {
+      console.error('Error updating order status:', error);
+      toast.error(error.message || 'Failed to update order status');
+    } finally {
+      setIsUpdatingStatus(false);
+    }
+  };
+
+  const getNextStatuses = (currentStatus: string): { value: string; label: string; color: string }[] => {
+    switch (currentStatus) {
+      case 'pending':
+        return [
+          { value: 'confirmed', label: 'Confirm Order', color: 'bg-blue-600 hover:bg-blue-700' },
+        ];
+      case 'confirmed':
+        return [
+          { value: 'shipped', label: 'Mark as Shipped', color: 'bg-purple-600 hover:bg-purple-700' },
+        ];
+      case 'shipped':
+        return [
+          { value: 'delivered', label: 'Mark as Delivered', color: 'bg-green-600 hover:bg-green-700' },
+        ];
+      default:
+        return [];
+    }
   };
 
   const getStatusBadgeStats = () => {
@@ -314,22 +411,34 @@ export default function SellerOrdersPage() {
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between pt-2">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pt-2">
                     <div>
                       <p className="text-sm text-gray-600">Your Total</p>
                       <p className="text-xl font-bold text-blue-600">
                         {formatPrice(order.sellerTotal)}
                       </p>
                     </div>
-                    <Button
-                      variant="outline"
-                      onClick={() => viewOrderDetails(order)}
-                      className="gap-2"
-                    >
-                      <Eye className="h-4 w-4" />
-                      View Details
-                      <ChevronRight className="h-4 w-4" />
-                    </Button>
+                    <div className="flex flex-wrap gap-2">
+                      {getNextStatuses(order.status).map((nextStatus) => (
+                        <Button
+                          key={nextStatus.value}
+                          size="sm"
+                          className={nextStatus.color}
+                          onClick={() => handleStatusChange(order, nextStatus.value)}
+                        >
+                          {nextStatus.label}
+                        </Button>
+                      ))}
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => viewOrderDetails(order)}
+                        className="gap-1"
+                      >
+                        <Eye className="h-4 w-4" />
+                        Details
+                      </Button>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -429,10 +538,112 @@ export default function SellerOrdersPage() {
                   </p>
                 </div>
               </div>
+
+              <div className="border-t pt-4">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="font-semibold">Order Status History</h3>
+                  <Clock className="h-5 w-5 text-gray-400" />
+                </div>
+                {isLoadingHistory ? (
+                  <div className="flex justify-center py-4">
+                    <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-600"></div>
+                  </div>
+                ) : orderHistory.length === 0 ? (
+                  <p className="text-sm text-gray-600">No status changes yet</p>
+                ) : (
+                  <div className="space-y-3">
+                    {orderHistory.map((history) => (
+                      <div key={history.id} className="flex gap-3 p-3 bg-gray-50 rounded-lg">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2">
+                            <Badge className={getStatusColor(history.old_status)}>
+                              {history.old_status}
+                            </Badge>
+                            <ChevronRight className="h-4 w-4 text-gray-400" />
+                            <Badge className={getStatusColor(history.new_status)}>
+                              {history.new_status}
+                            </Badge>
+                          </div>
+                          <p className="text-xs text-gray-600 mt-2">
+                            Changed by {history.changed_by_role} • {format(new Date(history.created_at), 'PPp')}
+                          </p>
+                          {history.notes && (
+                            <p className="text-sm text-gray-700 mt-2 italic">"{history.notes}"</p>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {getNextStatuses(selectedOrder.status).length > 0 && (
+                <div className="border-t pt-4">
+                  <h3 className="font-semibold mb-3">Update Order Status</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {getNextStatuses(selectedOrder.status).map((nextStatus) => (
+                      <Button
+                        key={nextStatus.value}
+                        className={nextStatus.color}
+                        onClick={() => handleStatusChange(selectedOrder, nextStatus.value)}
+                      >
+                        {nextStatus.label}
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </DialogContent>
       </Dialog>
+
+      <AlertDialog open={showStatusDialog} onOpenChange={setShowStatusDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Update Order Status</AlertDialogTitle>
+            <AlertDialogDescription>
+              {selectedOrder && newStatus && (
+                <div className="space-y-3">
+                  <p>
+                    Change order <strong>#{selectedOrder.order_number}</strong> status from{' '}
+                    <Badge className={getStatusColor(selectedOrder.status)}>
+                      {selectedOrder.status}
+                    </Badge>{' '}
+                    to{' '}
+                    <Badge className={getStatusColor(newStatus)}>
+                      {newStatus}
+                    </Badge>
+                  </p>
+                  <div className="pt-2">
+                    <Label htmlFor="statusNotes" className="text-sm">
+                      Notes (Optional)
+                    </Label>
+                    <Textarea
+                      id="statusNotes"
+                      placeholder="Add any notes about this status change..."
+                      value={statusNotes}
+                      onChange={(e) => setStatusNotes(e.target.value)}
+                      rows={3}
+                      className="mt-2"
+                    />
+                  </div>
+                </div>
+              )}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isUpdatingStatus}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={confirmStatusChange}
+              disabled={isUpdatingStatus}
+              className="bg-blue-600 hover:bg-blue-700"
+            >
+              {isUpdatingStatus ? 'Updating...' : 'Confirm Update'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </SellerLayout>
   );
 }
