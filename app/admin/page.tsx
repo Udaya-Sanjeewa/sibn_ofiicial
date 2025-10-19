@@ -148,7 +148,33 @@ export default function AdminDashboard() {
           </Card>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center">
+                <ShoppingCart className="w-5 h-5 mr-2" />
+                Orders
+              </CardTitle>
+              <CardDescription>
+                Advanced order management
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                <Link href="/admin/orders">
+                  <Button className="w-full justify-start" variant="outline">
+                    View All Orders
+                  </Button>
+                </Link>
+                <div className="text-sm text-gray-600">
+                  {stats.totalOrders} total orders
+                  <br />
+                  {stats.pendingOrders} pending
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center">
@@ -234,6 +260,11 @@ export default function AdminDashboard() {
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <Link href="/admin/orders">
+                <Button variant="secondary" className="w-full">
+                  Order Management
+                </Button>
+              </Link>
               <Link href="/admin/products?featured=true">
                 <Button variant="secondary" className="w-full">
                   Featured Products
@@ -242,11 +273,6 @@ export default function AdminDashboard() {
               <Link href="/admin/products?new=true">
                 <Button variant="secondary" className="w-full">
                   New Arrivals
-                </Button>
-              </Link>
-              <Link href="/admin/orders">
-                <Button variant="secondary" className="w-full">
-                  Pending Orders
                 </Button>
               </Link>
               <Link href="/">

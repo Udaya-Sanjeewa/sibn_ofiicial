@@ -125,15 +125,17 @@ export default function AdminOrdersPage() {
         (ordersData || []).map(async (order) => {
           const { data: items } = await supabase
             .from('order_items')
-            .select('*, seller_profiles!inner(business_name, district)')
+            .select('*, seller_profiles(business_name, district)')
             .eq('order_id', order.id);
 
           const sellerGroups = items?.reduce((acc: any, item: any) => {
             const sellerId = item.seller_id;
+            if (!sellerId) return acc;
+
             if (!acc[sellerId]) {
               acc[sellerId] = {
                 seller_id: sellerId,
-                business_name: item.seller_profiles?.business_name || 'Unknown',
+                business_name: item.seller_profiles?.business_name || 'Unknown Seller',
                 district: item.seller_profiles?.district || 'Unknown',
                 total_amount: 0,
                 items: [],
@@ -164,16 +166,18 @@ export default function AdminOrdersPage() {
     try {
       const { data: orderItems } = await supabase
         .from('order_items')
-        .select('*, orders!inner(status), seller_profiles!inner(business_name, district)');
+        .select('*, orders!inner(status), seller_profiles(business_name, district)');
 
       const incomeMap = orderItems?.reduce((acc: any, item: any) => {
         const sellerId = item.seller_id;
-        const orderStatus = item.orders.status;
+        if (!sellerId) return acc;
+
+        const orderStatus = item.orders?.status;
 
         if (!acc[sellerId]) {
           acc[sellerId] = {
             seller_id: sellerId,
-            business_name: item.seller_profiles?.business_name || 'Unknown',
+            business_name: item.seller_profiles?.business_name || 'Unknown Seller',
             district: item.seller_profiles?.district || 'Unknown',
             total_orders: 0,
             total_income: 0,

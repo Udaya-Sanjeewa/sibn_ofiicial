@@ -94,6 +94,14 @@ export function AuthButton() {
           </Link>
         </DropdownMenuItem>
 
+        {user.role === 'admin' && (
+          <DropdownMenuItem asChild>
+            <Link href="/admin/orders" className="flex items-center cursor-pointer">
+              <ShoppingBag className="mr-2 h-4 w-4" />
+              <span>Order Management</span>
+            </Link>
+          </DropdownMenuItem>
+        )}
 
         {user.role === 'seller' && (
           <>
