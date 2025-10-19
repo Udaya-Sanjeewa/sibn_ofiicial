@@ -152,30 +152,6 @@ export default function AdminDashboard() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center">
-                <ShoppingCart className="w-5 h-5 mr-2" />
-                Orders
-              </CardTitle>
-              <CardDescription>
-                Manage customer orders
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                <Link href="/admin/orders">
-                  <Button className="w-full justify-start" variant="outline">
-                    View All Orders
-                  </Button>
-                </Link>
-                <div className="text-sm text-gray-600">
-                  {stats.pendingOrders} orders need attention
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center">
                 <Users className="w-5 h-5 mr-2" />
                 Users
               </CardTitle>
@@ -217,35 +193,6 @@ export default function AdminDashboard() {
                 <div className="text-sm text-gray-600">
                   Sales and performance metrics
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <Package className="w-5 h-5 mr-2" />
-                Products
-              </CardTitle>
-              <CardDescription>
-                Manage your product listings
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                <Link href="/admin/products">
-                  <Button className="w-full justify-start" variant="outline">
-                    View All Products
-                  </Button>
-                </Link>
-                <Link href="/admin/products/new">
-                  <Button className="w-full justify-start">
-                    <Plus className="w-4 h-4 mr-2" />
-                    Add New Product
-                  </Button>
-                </Link>
               </div>
             </CardContent>
           </Card>
