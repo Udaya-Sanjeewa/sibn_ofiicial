@@ -26,15 +26,71 @@ Deno.serve(async (req: Request) => {
     });
 
     const users = [
+      // Regular Users
       {
-        email: 'admin@sibn.com',
-        password: 'admin123',
-        role: 'admin',
-      },
-      {
-        email: 'user@sibn.com',
+        email: 'user1@sibn.com',
         password: 'user123',
         role: 'user',
+        name: 'John Smith',
+      },
+      {
+        email: 'user2@sibn.com',
+        password: 'user123',
+        role: 'user',
+        name: 'Sarah Johnson',
+      },
+      {
+        email: 'user3@sibn.com',
+        password: 'user123',
+        role: 'user',
+        name: 'Mike Davis',
+      },
+      // Admin Users
+      {
+        email: 'admin1@sibn.com',
+        password: 'admin123',
+        role: 'admin',
+        name: 'Admin One',
+      },
+      {
+        email: 'admin2@sibn.com',
+        password: 'admin123',
+        role: 'admin',
+        name: 'Admin Two',
+      },
+      {
+        email: 'admin3@sibn.com',
+        password: 'admin123',
+        role: 'admin',
+        name: 'Admin Three',
+      },
+      // Seller Users
+      {
+        email: 'seller1@sibn.com',
+        password: 'seller123',
+        role: 'seller',
+        name: 'Tech Store',
+        businessName: 'Tech Store Electronics',
+        businessEmail: 'contact@techstore.com',
+        businessPhone: '+1234567890',
+      },
+      {
+        email: 'seller2@sibn.com',
+        password: 'seller123',
+        role: 'seller',
+        name: 'Fashion Hub',
+        businessName: 'Fashion Hub Clothing',
+        businessEmail: 'info@fashionhub.com',
+        businessPhone: '+1234567891',
+      },
+      {
+        email: 'seller3@sibn.com',
+        password: 'seller123',
+        role: 'seller',
+        name: 'Home Goods',
+        businessName: 'Home Goods Essentials',
+        businessEmail: 'support@homegoods.com',
+        businessPhone: '+1234567892',
       },
     ];
 
@@ -68,28 +124,34 @@ Deno.serve(async (req: Request) => {
           error: error.message,
         });
       } else {
-        if (userData.role === 'admin') {
-          await supabaseAdmin
-            .from('admin_users')
-            .insert({
-              user_id: data.user.id,
-              email: userData.email,
-              role: 'admin',
-            });
-        }
-
+        // Create user profile for all users
         await supabaseAdmin
-          .from('profiles')
+          .from('user_profiles')
           .insert({
             id: data.user.id,
             email: userData.email,
-            full_name: userData.role === 'admin' ? 'Admin User' : 'Regular User',
+            name: userData.name,
           });
+
+        // Create seller profile if user is a seller
+        if (userData.role === 'seller') {
+          await supabaseAdmin
+            .from('seller_profiles')
+            .insert({
+              id: data.user.id,
+              business_name: userData.businessName,
+              business_email: userData.businessEmail,
+              business_phone: userData.businessPhone,
+              is_verified: true,
+              is_active: true,
+            });
+        }
 
         results.push({
           email: userData.email,
           status: 'created',
           user_id: data.user.id,
+          role: userData.role,
         });
       }
     }
