@@ -7,7 +7,7 @@ export interface User {
   name: string;
   mobile?: string;
   email: string;
-  role: 'user' | 'admin';
+  role: 'user' | 'admin' | 'seller';
 }
 
 export class AuthManager {
@@ -27,6 +27,23 @@ export class AuthManager {
   static async isAdmin(): Promise<boolean> {
     const user = await this.getUser();
     return user?.role === 'admin';
+  }
+
+  static async isSeller(): Promise<boolean> {
+    const user = await this.getUser();
+    return user?.role === 'seller';
+  }
+
+  static getDashboardPath(role: 'user' | 'admin' | 'seller'): string {
+    switch (role) {
+      case 'admin':
+        return '/admin';
+      case 'seller':
+        return '/seller/dashboard';
+      case 'user':
+      default:
+        return '/';
+    }
   }
 
   static async signOut(): Promise<void> {

@@ -43,7 +43,7 @@ export default function SellerLayout({ children }: SellerLayoutProps) {
     try {
       await supabase.auth.signOut();
       toast.success('Signed out successfully');
-      router.push('/seller/login');
+      router.push('/auth/signin');
     } catch (error) {
       toast.error('Failed to sign out');
     }

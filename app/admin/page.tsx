@@ -29,7 +29,7 @@ export default function AdminDashboard() {
       console.log('Is admin:', admin);
 
       if (!admin) {
-        router.push('/admin/login');
+        router.push('/auth/signin');
       } else {
         setIsAdmin(true);
         loadStats();

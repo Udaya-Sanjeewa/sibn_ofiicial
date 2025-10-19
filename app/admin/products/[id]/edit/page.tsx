@@ -51,7 +51,7 @@ export default function EditProduct() {
     const checkAdminAndLoadData = async () => {
       const admin = await AuthManager.isAdmin();
       if (!admin) {
-        router.push('/admin/login');
+        router.push('/auth/signin');
         return;
       }
       await loadCategories();

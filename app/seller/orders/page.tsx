@@ -22,7 +22,7 @@ export default function SellerOrdersPage() {
   useEffect(() => {
     const checkAuth = async () => {
       if (!isLoading && !user) {
-        router.push('/seller/login');
+        router.push('/auth/signin');
         return;
       }
 
@@ -31,7 +31,7 @@ export default function SellerOrdersPage() {
         const userRole = session?.user?.user_metadata?.role;
 
         if (userRole !== 'seller') {
-          router.push('/seller/login');
+          router.push('/auth/signin');
           return;
         }
 

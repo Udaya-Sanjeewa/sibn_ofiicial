@@ -27,7 +27,7 @@ export default function SellerBankDetailsPage() {
   useEffect(() => {
     const checkAuthAndLoad = async () => {
       if (!isLoading && !user) {
-        router.push('/seller/login');
+        router.push('/auth/signin');
         return;
       }
 
@@ -36,7 +36,7 @@ export default function SellerBankDetailsPage() {
         const userRole = session?.user?.user_metadata?.role;
 
         if (userRole !== 'seller') {
-          router.push('/seller/login');
+          router.push('/auth/signin');
           return;
         }
 

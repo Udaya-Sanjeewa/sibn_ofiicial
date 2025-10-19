@@ -208,7 +208,7 @@ export default function SellerRegisterPage() {
             <div className="mt-6 text-center">
               <p className="text-sm text-gray-600">
                 Already have an account?{' '}
-                <Link href="/seller/login" className="text-blue-600 hover:underline font-medium">
+                <Link href="/auth/signin" className="text-blue-600 hover:underline font-medium">
                   Sign in here
                 </Link>
               </p>

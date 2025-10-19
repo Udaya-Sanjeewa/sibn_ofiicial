@@ -33,9 +33,12 @@ export default function SignInPage() {
         setError(result.error || 'Sign in failed');
         toast.error(result.error || 'Sign in failed');
       } else {
+        const role = result.user?.role || 'user';
+        const dashboardPath = role === 'admin' ? '/admin' : role === 'seller' ? '/seller/dashboard' : '/';
+
         toast.success('Successfully signed in!');
         setTimeout(() => {
-          router.push('/');
+          router.push(dashboardPath);
           router.refresh();
         }, 500);
       }
@@ -48,12 +51,12 @@ export default function SignInPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-cyan-50 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center space-x-2">
-            <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+            <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-lg flex items-center justify-center">
               <ShoppingCart className="w-7 h-7 text-white" />
             </div>
             <div>
@@ -69,7 +72,7 @@ export default function SignInPage() {
               Welcome Back
             </CardTitle>
             <CardDescription className="text-center text-gray-600">
-              Sign in to your account to continue shopping
+              Sign in to your account to continue
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -127,7 +130,7 @@ export default function SignInPage() {
 
               <Button
                 type="submit"
-                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-2.5"
+                className="w-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-semibold py-2.5"
                 disabled={isLoading}
               >
                 {isLoading ? 'Signing In...' : 'Sign In'}
