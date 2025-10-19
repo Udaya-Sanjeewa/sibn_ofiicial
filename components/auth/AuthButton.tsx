@@ -22,6 +22,20 @@ export function AuthButton() {
     toast.success('Signed out successfully');
   };
 
+  const getDashboardLink = () => {
+    if (!user) return '/account';
+
+    switch (user.role) {
+      case 'admin':
+        return '/admin';
+      case 'seller':
+        return '/seller/dashboard';
+      case 'user':
+      default:
+        return '/account';
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="flex items-center space-x-2">
@@ -72,35 +86,82 @@ export function AuthButton() {
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
-          <Link href="/account" className="flex items-center cursor-pointer">
+          <Link href={getDashboardLink()} className="flex items-center cursor-pointer">
             <User className="mr-2 h-4 w-4" />
-            <span>Account Dashboard</span>
+            <span>
+              {user.role === 'admin' ? 'Admin Dashboard' : user.role === 'seller' ? 'Seller Dashboard' : 'Account Dashboard'}
+            </span>
           </Link>
         </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link href="/account/profile" className="flex items-center cursor-pointer">
-            <User className="mr-2 h-4 w-4" />
-            <span>Profile</span>
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link href="/account/orders" className="flex items-center cursor-pointer">
-            <ShoppingBag className="mr-2 h-4 w-4" />
-            <span>My Orders</span>
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link href="/account/watchlist" className="flex items-center cursor-pointer">
-            <Heart className="mr-2 h-4 w-4" />
-            <span>Watchlist</span>
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link href="/account/settings" className="flex items-center cursor-pointer">
-            <Settings className="mr-2 h-4 w-4" />
-            <span>Settings</span>
-          </Link>
-        </DropdownMenuItem>
+
+        {user.role === 'admin' && (
+          <>
+            <DropdownMenuItem asChild>
+              <Link href="/admin/products" className="flex items-center cursor-pointer">
+                <ShoppingBag className="mr-2 h-4 w-4" />
+                <span>Manage Products</span>
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href="/admin/orders" className="flex items-center cursor-pointer">
+                <ShoppingBag className="mr-2 h-4 w-4" />
+                <span>Manage Orders</span>
+              </Link>
+            </DropdownMenuItem>
+          </>
+        )}
+
+        {user.role === 'seller' && (
+          <>
+            <DropdownMenuItem asChild>
+              <Link href="/seller/products" className="flex items-center cursor-pointer">
+                <ShoppingBag className="mr-2 h-4 w-4" />
+                <span>My Products</span>
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href="/seller/orders" className="flex items-center cursor-pointer">
+                <ShoppingBag className="mr-2 h-4 w-4" />
+                <span>My Orders</span>
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href="/seller/profile" className="flex items-center cursor-pointer">
+                <User className="mr-2 h-4 w-4" />
+                <span>Business Profile</span>
+              </Link>
+            </DropdownMenuItem>
+          </>
+        )}
+
+        {user.role === 'user' && (
+          <>
+            <DropdownMenuItem asChild>
+              <Link href="/account/profile" className="flex items-center cursor-pointer">
+                <User className="mr-2 h-4 w-4" />
+                <span>Profile</span>
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href="/account/orders" className="flex items-center cursor-pointer">
+                <ShoppingBag className="mr-2 h-4 w-4" />
+                <span>My Orders</span>
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href="/account/watchlist" className="flex items-center cursor-pointer">
+                <Heart className="mr-2 h-4 w-4" />
+                <span>Watchlist</span>
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href="/account/settings" className="flex items-center cursor-pointer">
+                <Settings className="mr-2 h-4 w-4" />
+                <span>Settings</span>
+              </Link>
+            </DropdownMenuItem>
+          </>
+        )}
         <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={handleSignOut}
