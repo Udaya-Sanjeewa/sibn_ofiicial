@@ -161,6 +161,8 @@ export default function SellerOrdersPage() {
         return 'bg-yellow-100 text-yellow-800 border-yellow-200';
       case 'confirmed':
         return 'bg-blue-100 text-blue-800 border-blue-200';
+      case 'ready':
+        return 'bg-orange-100 text-orange-800 border-orange-200';
       case 'shipped':
         return 'bg-purple-100 text-purple-800 border-purple-200';
       case 'delivered':
@@ -253,6 +255,10 @@ export default function SellerOrdersPage() {
         ];
       case 'confirmed':
         return [
+          { value: 'ready', label: 'Mark as Ready', color: 'bg-orange-600 hover:bg-orange-700' },
+        ];
+      case 'ready':
+        return [
           { value: 'shipped', label: 'Mark as Shipped', color: 'bg-purple-600 hover:bg-purple-700' },
         ];
       case 'shipped':
@@ -269,6 +275,7 @@ export default function SellerOrdersPage() {
       all: orders.length,
       pending: orders.filter(o => o.status === 'pending').length,
       confirmed: orders.filter(o => o.status === 'confirmed').length,
+      ready: orders.filter(o => o.status === 'ready').length,
       shipped: orders.filter(o => o.status === 'shipped').length,
       delivered: orders.filter(o => o.status === 'delivered').length,
       cancelled: orders.filter(o => o.status === 'cancelled').length,
@@ -293,7 +300,7 @@ export default function SellerOrdersPage() {
           <p className="text-gray-600 mt-1">Manage orders containing your products</p>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-4">
           <Card className={`cursor-pointer transition-all hover:shadow-md ${statusFilter === 'all' ? 'ring-2 ring-blue-500' : ''}`} onClick={() => setStatusFilter('all')}>
             <CardContent className="pt-6 pb-4 text-center">
               <p className="text-2xl font-bold text-gray-900">{stats.all}</p>
@@ -310,6 +317,12 @@ export default function SellerOrdersPage() {
             <CardContent className="pt-6 pb-4 text-center">
               <p className="text-2xl font-bold text-blue-600">{stats.confirmed}</p>
               <p className="text-sm text-gray-600 mt-1">Confirmed</p>
+            </CardContent>
+          </Card>
+          <Card className={`cursor-pointer transition-all hover:shadow-md ${statusFilter === 'ready' ? 'ring-2 ring-orange-500' : ''}`} onClick={() => setStatusFilter('ready')}>
+            <CardContent className="pt-6 pb-4 text-center">
+              <p className="text-2xl font-bold text-orange-600">{stats.ready}</p>
+              <p className="text-sm text-gray-600 mt-1">Ready</p>
             </CardContent>
           </Card>
           <Card className={`cursor-pointer transition-all hover:shadow-md ${statusFilter === 'shipped' ? 'ring-2 ring-purple-500' : ''}`} onClick={() => setStatusFilter('shipped')}>
@@ -353,6 +366,7 @@ export default function SellerOrdersPage() {
                   <SelectItem value="all">All Orders</SelectItem>
                   <SelectItem value="pending">Pending</SelectItem>
                   <SelectItem value="confirmed">Confirmed</SelectItem>
+                  <SelectItem value="ready">Ready</SelectItem>
                   <SelectItem value="shipped">Shipped</SelectItem>
                   <SelectItem value="delivered">Delivered</SelectItem>
                   <SelectItem value="cancelled">Cancelled</SelectItem>

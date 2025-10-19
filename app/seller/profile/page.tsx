@@ -10,6 +10,14 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { SRI_LANKA_DISTRICTS } from '@/lib/districts';
 import { toast } from 'sonner';
 
 export default function SellerProfilePage() {
@@ -23,6 +31,7 @@ export default function SellerProfilePage() {
     business_address: '',
     business_description: '',
     business_logo: '',
+    district: '',
   });
 
   useEffect(() => {
@@ -65,6 +74,7 @@ export default function SellerProfilePage() {
         business_address: data.business_address || '',
         business_description: data.business_description || '',
         business_logo: data.business_logo || '',
+        district: data.district || '',
       });
     }
   };
@@ -176,6 +186,25 @@ export default function SellerProfilePage() {
                   onChange={handleInputChange}
                   rows={2}
                 />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="district">District *</Label>
+                <Select
+                  value={formData.district}
+                  onValueChange={(value) => setFormData(prev => ({ ...prev, district: value }))}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select your district" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {SRI_LANKA_DISTRICTS.map((district) => (
+                      <SelectItem key={district} value={district}>
+                        {district}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
 
               <div className="space-y-2">

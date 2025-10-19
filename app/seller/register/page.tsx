@@ -8,6 +8,14 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { SRI_LANKA_DISTRICTS } from '@/lib/districts';
 import { Store, ArrowLeft } from 'lucide-react';
 import { toast } from 'sonner';
 import Link from 'next/link';
@@ -23,6 +31,7 @@ export default function SellerRegisterPage() {
     businessEmail: '',
     businessPhone: '',
     businessDescription: '',
+    district: '',
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -68,6 +77,7 @@ export default function SellerRegisterPage() {
             business_email: formData.businessEmail,
             business_phone: formData.businessPhone,
             business_description: formData.businessDescription,
+            district: formData.district,
           });
 
         if (profileError) throw profileError;
@@ -192,6 +202,24 @@ export default function SellerRegisterPage() {
                     value={formData.businessDescription}
                     onChange={handleInputChange}
                   />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="district">District *</Label>
+                  <Select
+                    value={formData.district}
+                    onValueChange={(value) => setFormData(prev => ({ ...prev, district: value }))}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select your district" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {SRI_LANKA_DISTRICTS.map((district) => (
+                        <SelectItem key={district} value={district}>
+                          {district}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
 
