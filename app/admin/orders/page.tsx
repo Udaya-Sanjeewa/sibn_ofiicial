@@ -119,40 +119,79 @@ export default function AdminOrdersPage() {
         .select('*')
         .order('created_at', { ascending: false });
 
-      if (ordersError) throw ordersError;
+      if (ordersError) {
+        console.error('Orders error:', ordersError);
+        throw ordersError;
+      }
+
+      console.log('Orders loaded:', ordersData?.length);
 
       const ordersWithSellers = await Promise.all(
         (ordersData || []).map(async (order) => {
-          const { data: items } = await supabase
-            .from('order_items')
-            .select('*, seller_profiles(business_name, district)')
-            .eq('order_id', order.id);
+          try {
+            const { data: items, error: itemsError } = await supabase
+              .from('order_items')
+              .select('id, product_title, product_image, quantity, price, subtotal, seller_id')
+              .eq('order_id', order.id);
 
-          const sellerGroups = items?.reduce((acc: any, item: any) => {
-            const sellerId = item.seller_id;
-            if (!sellerId) return acc;
-
-            if (!acc[sellerId]) {
-              acc[sellerId] = {
-                seller_id: sellerId,
-                business_name: item.seller_profiles?.business_name || 'Unknown Seller',
-                district: item.seller_profiles?.district || 'Unknown',
-                total_amount: 0,
-                items: [],
-              };
+            if (itemsError) {
+              console.error('Error loading items for order', order.id, itemsError);
             }
-            acc[sellerId].total_amount += item.subtotal;
-            acc[sellerId].items.push(item);
-            return acc;
-          }, {});
 
-          return {
-            ...order,
-            sellers: Object.values(sellerGroups || {}),
-          };
+            console.log('Items for order', order.order_number, ':', items?.length);
+
+            const uniqueSellerIds = new Set(items?.map(item => item.seller_id).filter(Boolean));
+            const sellerIds = Array.from(uniqueSellerIds);
+
+            const sellerDataMap: any = {};
+            if (sellerIds.length > 0) {
+              const { data: sellerData } = await supabase
+                .from('seller_profiles')
+                .select('id, business_name, district')
+                .in('id', sellerIds);
+
+              sellerData?.forEach(seller => {
+                sellerDataMap[seller.id] = seller;
+              });
+            }
+
+            const sellerGroups = items?.reduce((acc: any, item: any) => {
+              const sellerId = item.seller_id;
+              if (!sellerId) {
+                console.log('Item without seller_id:', item.product_title);
+                return acc;
+              }
+
+              if (!acc[sellerId]) {
+                const sellerInfo = sellerDataMap[sellerId];
+                acc[sellerId] = {
+                  seller_id: sellerId,
+                  business_name: sellerInfo?.business_name || 'Unknown Seller',
+                  district: sellerInfo?.district || 'Unknown',
+                  total_amount: 0,
+                  items: [],
+                };
+              }
+              acc[sellerId].total_amount += item.subtotal;
+              acc[sellerId].items.push(item);
+              return acc;
+            }, {});
+
+            return {
+              ...order,
+              sellers: Object.values(sellerGroups || {}),
+            };
+          } catch (itemError) {
+            console.error('Error processing order', order.id, itemError);
+            return {
+              ...order,
+              sellers: [],
+            };
+          }
         })
       );
 
+      console.log('Orders with sellers:', ordersWithSellers.length);
       setOrders(ordersWithSellers);
     } catch (error) {
       console.error('Error loading orders:', error);
@@ -164,21 +203,55 @@ export default function AdminOrdersPage() {
 
   const loadSellerIncomes = async () => {
     try {
-      const { data: orderItems } = await supabase
+      const { data: orderItems, error: itemsError } = await supabase
         .from('order_items')
-        .select('*, orders!inner(status), seller_profiles(business_name, district)');
+        .select('seller_id, subtotal, order_id');
+
+      if (itemsError) {
+        console.error('Error loading order items for income:', itemsError);
+        return;
+      }
+
+      console.log('Order items loaded:', orderItems?.length);
+
+      const uniqueOrderIds = new Set(orderItems?.map(item => item.order_id).filter(Boolean));
+      const orderIds = Array.from(uniqueOrderIds);
+
+      const { data: ordersData } = await supabase
+        .from('orders')
+        .select('id, status')
+        .in('id', orderIds);
+
+      const orderStatusMap: any = {};
+      ordersData?.forEach(order => {
+        orderStatusMap[order.id] = order.status;
+      });
+
+      const uniqueSellerIds = new Set(orderItems?.map(item => item.seller_id).filter(Boolean));
+      const sellerIds = Array.from(uniqueSellerIds);
+
+      const { data: sellerData } = await supabase
+        .from('seller_profiles')
+        .select('id, business_name, district')
+        .in('id', sellerIds);
+
+      const sellerDataMap: any = {};
+      sellerData?.forEach(seller => {
+        sellerDataMap[seller.id] = seller;
+      });
 
       const incomeMap = orderItems?.reduce((acc: any, item: any) => {
         const sellerId = item.seller_id;
         if (!sellerId) return acc;
 
-        const orderStatus = item.orders?.status;
+        const orderStatus = orderStatusMap[item.order_id];
 
         if (!acc[sellerId]) {
+          const sellerInfo = sellerDataMap[sellerId];
           acc[sellerId] = {
             seller_id: sellerId,
-            business_name: item.seller_profiles?.business_name || 'Unknown Seller',
-            district: item.seller_profiles?.district || 'Unknown',
+            business_name: sellerInfo?.business_name || 'Unknown Seller',
+            district: sellerInfo?.district || 'Unknown',
             total_orders: 0,
             total_income: 0,
             pending_income: 0,
@@ -198,7 +271,9 @@ export default function AdminOrdersPage() {
         return acc;
       }, {});
 
-      setSellerIncomes(Object.values(incomeMap || {}));
+      const incomes = Object.values(incomeMap || {}) as SellerIncome[];
+      console.log('Seller incomes calculated:', incomes.length);
+      setSellerIncomes(incomes);
     } catch (error) {
       console.error('Error loading seller incomes:', error);
     }
