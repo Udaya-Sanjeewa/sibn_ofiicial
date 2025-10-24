@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Search, ShoppingCart, Menu, X, User, Heart } from 'lucide-react';
+import { Search, ShoppingCart, Menu, X, User, Heart, HelpCircle, Package, AlignJustify, ChevronDown } from 'lucide-react';
 import { useCart } from '@/hooks/useCart';
 import { useWatchlist } from '@/hooks/useWatchlist';
 import { CartDrawer } from '@/components/cart/CartDrawer';
@@ -14,6 +14,7 @@ import type { Category } from '@/types';
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isCategoriesOpen, setIsCategoriesOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [categories, setCategories] = useState<Category[]>([]);
   const { itemCount } = useCart();
@@ -39,26 +40,6 @@ export function Header() {
   return (
     <>
       <header className="bg-white shadow-sm border-b sticky top-0 z-40">
-        {/* Top Bar */}
-        <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-2">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center text-sm">
-              <div className="flex items-center space-x-4">
-                <span>📞 +94 11 234 5678</span>
-                <span>✉️ support@sibnecommerce.lk</span>
-              </div>
-              <div className="flex items-center space-x-4">
-                <Link href="/help" className="hover:text-blue-200 transition-colors">
-                  Help
-                </Link>
-                <Link href="/track-order" className="hover:text-blue-200 transition-colors">
-                  Track Order
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-
         {/* Main Header */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
@@ -93,7 +74,19 @@ export function Header() {
             </div>
 
             {/* Right Side Icons */}
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2">
+              {/* Track Order - Desktop */}
+              <Link href="/track-order" className="hidden md:flex items-center space-x-1 px-3 py-2 text-gray-700 hover:text-blue-600 transition-colors">
+                <Package className="w-5 h-5" />
+                <span className="text-sm font-medium">Track Order</span>
+              </Link>
+
+              {/* Help - Desktop */}
+              <Link href="/help" className="hidden md:flex items-center space-x-1 px-3 py-2 text-gray-700 hover:text-blue-600 transition-colors">
+                <HelpCircle className="w-5 h-5" />
+                <span className="text-sm font-medium">Help</span>
+              </Link>
+
               {/* Search Icon - Mobile */}
               <button className="md:hidden p-2 text-gray-600 hover:text-gray-900">
                 <Link href="/search">
@@ -147,12 +140,47 @@ export function Header() {
         {/* Navigation */}
         <nav className="border-t border-gray-200">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="hidden md:flex space-x-8 py-4">
-              {categories.map((category) => (
+            <div className="hidden md:flex items-center space-x-6 py-4">
+              {/* All Categories Dropdown */}
+              <div className="relative">
+                <button
+                  onClick={() => setIsCategoriesOpen(!isCategoriesOpen)}
+                  className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                >
+                  <AlignJustify className="w-5 h-5" />
+                  <span>All Categories</span>
+                  <ChevronDown className={`w-4 h-4 transition-transform ${isCategoriesOpen ? 'rotate-180' : ''}`} />
+                </button>
+
+                {/* Categories Dropdown */}
+                {isCategoriesOpen && (
+                  <>
+                    <div
+                      className="fixed inset-0 z-10"
+                      onClick={() => setIsCategoriesOpen(false)}
+                    />
+                    <div className="absolute top-full left-0 mt-2 w-64 bg-white rounded-lg shadow-xl border border-gray-200 py-2 z-20">
+                      {categories.map((category) => (
+                        <Link
+                          key={category.id}
+                          href={`/category/${category.slug}`}
+                          onClick={() => setIsCategoriesOpen(false)}
+                          className="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
+                        >
+                          {category.name}
+                        </Link>
+                      ))}
+                    </div>
+                  </>
+                )}
+              </div>
+
+              {/* Visible Categories (First 7) */}
+              {categories.slice(0, 7).map((category) => (
                 <Link
                   key={category.id}
                   href={`/category/${category.slug}`}
-                  className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
+                  className="text-gray-700 hover:text-blue-600 font-medium transition-colors whitespace-nowrap"
                 >
                   {category.name}
                 </Link>
@@ -207,6 +235,13 @@ export function Header() {
                   <WatchlistDrawer>
                     <span>Watchlist ({watchlistCount})</span>
                   </WatchlistDrawer>
+                </Link>
+                <Link
+                  href="/track-order"
+                  className="block py-2 text-gray-700 hover:text-blue-600"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Track Order
                 </Link>
                 <Link
                   href="/help"
