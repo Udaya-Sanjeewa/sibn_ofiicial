@@ -81,13 +81,13 @@ export function FeaturedProducts() {
         ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {products.map((product) => (
-            <Link
+            <div
               key={product.id}
-              href={`/product/${product.id}`}
               className="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-blue-200"
             >
-              {/* Product Image */}
-              <div className="relative aspect-[4/3] overflow-hidden">
+              <Link href={`/product/${product.id}`}>
+                {/* Product Image */}
+                <div className="relative aspect-[4/3] overflow-hidden">
                 <Image
                   src={product.images[0]}
                   alt={product.title}
@@ -210,17 +210,20 @@ export function FeaturedProducts() {
                     )}
                   </div>
                 )}
+              </div>
+            </Link>
 
-                {/* Add to Cart Button */}
-                <div className="mt-4 pt-3 border-t border-gray-100">
-                  <AddToCartButton 
-                    product={product} 
-                    size="sm" 
+              {/* Add to Cart Button */}
+              <div className="p-5 pt-0">
+                <div className="pt-3 border-t border-gray-100">
+                  <AddToCartButton
+                    product={product}
+                    size="sm"
                     className="w-full"
                   />
                 </div>
               </div>
-            </Link>
+            </div>
           ))}
         </div>
         )}

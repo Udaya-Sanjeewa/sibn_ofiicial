@@ -63,7 +63,7 @@ export function ProductGrid({ products, viewMode = 'grid' }: ProductGridProps) {
               : "group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-blue-200 flex"
           }
         >
-          <Link href={`/product/${product.id}`} className="contents">
+          <Link href={`/product/${product.id}`} className={viewMode === 'grid' ? 'block' : 'contents'}>
             {/* Product Image */}
             <div className={
               viewMode === 'grid'
@@ -205,20 +205,23 @@ export function ProductGrid({ products, viewMode = 'grid' }: ProductGridProps) {
                 </div>
               )}
 
-              {/* Add to Cart Button */}
-              <div className={
-                viewMode === 'grid'
-                  ? "pt-3 border-t border-gray-100"
-                  : "pt-4 border-t border-gray-100"
-              }>
-                <AddToCartButton 
-                  product={product} 
-                  size={viewMode === 'grid' ? 'sm' : 'default'}
-                  className="w-full"
-                />
-              </div>
             </div>
           </Link>
+
+          {/* Add to Cart Button */}
+          <div className={viewMode === 'grid' ? 'p-5 pt-0' : 'px-5 pb-5'}>
+            <div className={
+              viewMode === 'grid'
+                ? "pt-3 border-t border-gray-100"
+                : "pt-4 border-t border-gray-100"
+            }>
+              <AddToCartButton
+                product={product}
+                size={viewMode === 'grid' ? 'sm' : 'default'}
+                className="w-full"
+              />
+            </div>
+          </div>
         </div>
       ))}
     </div>
