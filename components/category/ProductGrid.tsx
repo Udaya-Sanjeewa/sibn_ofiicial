@@ -89,9 +89,11 @@ export function ProductGrid({ products, viewMode = 'grid' }: ProductGridProps) {
                     New
                   </Badge>
                 )}
-                <Badge variant="secondary" className="bg-black/70 text-white border-0">
-                  {product.condition}
-                </Badge>
+                {!product.isNew && (
+                  <Badge variant="secondary" className="bg-black/70 text-white border-0 capitalize">
+                    {product.condition}
+                  </Badge>
+                )}
               </div>
 
               {/* Favorite Button */}
