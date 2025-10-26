@@ -59,7 +59,7 @@ export function AuthButton() {
         <Link href="/auth/signup">
           <Button
             size="sm"
-            className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white"
+            className="bg-gradient-to-r from-[#ff5722] to-[#e64a19] hover:from-[#e64a19] hover:to-[#d84315] text-white"
           >
             Sign Up
           </Button>
@@ -72,7 +72,7 @@ export function AuthButton() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="flex items-center space-x-2 p-2">
-          <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white text-sm font-semibold">
+          <div className="w-8 h-8 bg-gradient-to-r from-[#ff5722] to-[#e64a19] rounded-full flex items-center justify-center text-white text-sm font-semibold">
             {user.name[0]?.toUpperCase() || 'U'}
           </div>
           <div className="hidden sm:block text-left">

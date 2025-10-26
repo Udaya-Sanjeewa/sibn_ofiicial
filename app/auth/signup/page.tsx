@@ -59,12 +59,12 @@ export default function SignUpPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center space-x-2">
-            <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+            <div className="w-12 h-12 bg-gradient-to-r from-[#ff5722] to-[#e64a19] rounded-lg flex items-center justify-center">
               <ShoppingCart className="w-7 h-7 text-white" />
             </div>
             <div>
@@ -201,7 +201,7 @@ export default function SignUpPage() {
 
               <Button
                 type="submit"
-                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-2.5"
+                className="w-full bg-gradient-to-r from-[#ff5722] to-[#e64a19] hover:from-[#e64a19] hover:to-[#d84315] text-white font-semibold py-2.5"
                 disabled={isLoading}
               >
                 {isLoading ? 'Creating Account...' : 'Create Account'}
@@ -213,7 +213,7 @@ export default function SignUpPage() {
                 Already have an account?{' '}
                 <Link
                   href="/auth/signin"
-                  className="font-semibold text-blue-600 hover:text-blue-700 transition-colors"
+                  className="font-semibold text-[#ff5722] hover:text-[#e64a19] transition-colors"
                 >
                   Sign in here
                 </Link>
@@ -231,11 +231,11 @@ export default function SignUpPage() {
 
             <div className="mt-6 text-xs text-gray-500 text-center">
               By creating an account, you agree to our{' '}
-              <Link href="/terms" className="text-blue-600 hover:text-blue-700">
+              <Link href="/terms" className="text-[#ff5722] hover:text-[#e64a19]">
                 Terms of Service
               </Link>{' '}
               and{' '}
-              <Link href="/privacy" className="text-blue-600 hover:text-blue-700">
+              <Link href="/privacy" className="text-[#ff5722] hover:text-[#e64a19]">
                 Privacy Policy
               </Link>
             </div>

@@ -139,14 +139,14 @@ export function Header() {
         </div>
 
         {/* Navigation */}
-        <nav className="border-t border-gray-200">
+        <nav className="border-t border-gray-200 bg-gradient-to-r from-[#ff5722] to-[#e64a19]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="hidden md:flex items-center space-x-6 py-4">
               {/* All Categories Dropdown */}
               <div className="relative">
                 <button
                   onClick={() => setIsCategoriesOpen(!isCategoriesOpen)}
-                  className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-[#ff5722] to-[#e64a19] text-white rounded-lg hover:from-[#e64a19] hover:to-[#d84315] transition-colors font-medium"
+                  className="flex items-center space-x-2 px-4 py-2 bg-white/20 backdrop-blur-sm text-white rounded-lg hover:bg-white/30 transition-colors font-medium"
                 >
                   <AlignJustify className="w-5 h-5" />
                   <span>All Categories</span>
@@ -181,7 +181,7 @@ export function Header() {
                 <Link
                   key={category.id}
                   href={`/category/${category.slug}`}
-                  className="text-gray-700 hover:text-[#ff5722] font-medium transition-colors whitespace-nowrap"
+                  className="text-white hover:text-white/80 font-medium transition-colors whitespace-nowrap"
                 >
                   {category.name}
                 </Link>
