@@ -8,6 +8,21 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowLeft, TrendingUp, Package, Users, DollarSign, ShoppingCart, Star, RefreshCw } from 'lucide-react';
 import Link from 'next/link';
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+  LineChart,
+  Line,
+} from 'recharts';
 
 interface Stats {
   totalRevenue: number;
@@ -182,38 +197,40 @@ export default function AdminAnalyticsPage() {
           </Card>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
           <Card>
             <CardHeader>
               <CardTitle>Order Status Overview</CardTitle>
               <CardDescription>Current order status breakdown</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                    <span className="text-sm">Pending Orders</span>
-                  </div>
-                  <span className="text-sm font-semibold">{stats.pendingOrders}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                    <span className="text-sm">Completed Orders</span>
-                  </div>
-                  <span className="text-sm font-semibold">{stats.completedOrders}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <div className="w-3 h-3 rounded-full bg-gray-500"></div>
-                    <span className="text-sm">Other Status</span>
-                  </div>
-                  <span className="text-sm font-semibold">
-                    {stats.totalOrders - stats.pendingOrders - stats.completedOrders}
-                  </span>
-                </div>
-              </div>
+              <ResponsiveContainer width="100%" height={300}>
+                <PieChart>
+                  <Pie
+                    data={[
+                      { name: 'Pending', value: stats.pendingOrders, color: '#EAB308' },
+                      { name: 'Completed', value: stats.completedOrders, color: '#22C55E' },
+                      { name: 'Other', value: stats.totalOrders - stats.pendingOrders - stats.completedOrders, color: '#6B7280' },
+                    ]}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                    outerRadius={80}
+                    fill="#8884d8"
+                    dataKey="value"
+                  >
+                    {[
+                      { name: 'Pending', value: stats.pendingOrders, color: '#EAB308' },
+                      { name: 'Completed', value: stats.completedOrders, color: '#22C55E' },
+                      { name: 'Other', value: stats.totalOrders - stats.pendingOrders - stats.completedOrders, color: '#6B7280' },
+                    ].map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                </PieChart>
+              </ResponsiveContainer>
             </CardContent>
           </Card>
 
@@ -223,27 +240,44 @@ export default function AdminAnalyticsPage() {
               <CardDescription>Categories with most products</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                {stats.topCategories.length === 0 ? (
-                  <p className="text-sm text-gray-500">No data available</p>
-                ) : (
-                  stats.topCategories.map((category, index) => (
-                    <div key={category.name} className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <span className="text-sm font-medium text-gray-500">#{index + 1}</span>
-                        <span className="text-sm">{category.name}</span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <span className="text-sm font-semibold">{category.count}</span>
-                        <span className="text-xs text-gray-500">products</span>
-                      </div>
-                    </div>
-                  ))
-                )}
-              </div>
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={stats.topCategories}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" angle={-45} textAnchor="end" height={100} />
+                  <YAxis />
+                  <Tooltip />
+                  <Bar dataKey="count" fill="#3B82F6" name="Products" />
+                </BarChart>
+              </ResponsiveContainer>
             </CardContent>
           </Card>
         </div>
+
+        <Card className="mb-6">
+          <CardHeader>
+            <CardTitle>Business Metrics Overview</CardTitle>
+            <CardDescription>Key performance indicators</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart
+                data={[
+                  { name: 'Revenue', value: stats.totalRevenue / 1000, label: 'LKR (K)' },
+                  { name: 'Orders', value: stats.totalOrders, label: 'Count' },
+                  { name: 'Users', value: stats.totalUsers, label: 'Count' },
+                  { name: 'Products', value: stats.totalProducts, label: 'Count' },
+                ]}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="value" fill="#8B5CF6" name="Value" />
+              </BarChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
 
         <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
           <Card>

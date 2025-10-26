@@ -135,15 +135,12 @@ export default function AdminDashboard() {
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Analytics</CardTitle>
+              <CardTitle className="text-sm font-medium">Pending Orders</CardTitle>
               <TrendingUp className="h-4 w-4 text-green-600" />
             </CardHeader>
             <CardContent>
-              <Link href="/admin/analytics">
-                <Button variant="outline" size="sm" className="w-full">
-                  View Stats
-                </Button>
-              </Link>
+              <div className="text-2xl font-bold">{stats.pendingOrders}</div>
+              <p className="text-xs text-muted-foreground">Awaiting processing</p>
             </CardContent>
           </Card>
         </div>
