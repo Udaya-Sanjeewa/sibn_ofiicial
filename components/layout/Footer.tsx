@@ -54,7 +54,7 @@ export function Footer() {
   return (
     <footer className="bg-gray-900 text-white">
       {/* Newsletter Section */}
-      <div className="bg-gradient-to-r from-blue-600 to-orange-500">
+      <div className="bg-gradient-to-r from-[#ff5722] to-[#e64a19]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center">
             <h3 className="text-2xl font-bold mb-2">Stay Updated!</h3>
@@ -65,7 +65,7 @@ export function Footer() {
                 placeholder="Enter your email"
                 className="flex-1 px-4 py-3 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-white"
               />
-              <button className="bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+              <button className="bg-white text-[#ff5722] px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
                 Subscribe
               </button>
             </div>
@@ -79,7 +79,7 @@ export function Footer() {
           {/* Company Info */}
           <div className="lg:col-span-1">
             <div className="flex items-center mb-4">
-              <div className="bg-gradient-to-r from-blue-600 to-orange-500 text-white px-3 py-2 rounded-lg font-bold text-xl">
+              <div className="bg-gradient-to-r from-[#ff5722] to-[#e64a19] text-white px-3 py-2 rounded-lg font-bold text-xl">
                 SIBN Ecommerce
               </div>
             </div>
@@ -90,25 +90,25 @@ export function Footer() {
             {/* Contact Info */}
             <div className="space-y-3 text-sm">
               <div className="flex items-center gap-2">
-                <Phone className="h-4 w-4 text-blue-400" />
+                <Phone className="h-4 w-4 text-[#ff5722]" />
                 <span className="text-gray-400">+94 11 234 5678</span>
               </div>
               <div className="flex items-center gap-2">
-                <Mail className="h-4 w-4 text-blue-400" />
+                <Mail className="h-4 w-4 text-[#ff5722]" />
                 <span className="text-gray-400">info@sibn-ecommerce.lk</span>
               </div>
               <div className="flex items-center gap-2">
-                <MapPin className="h-4 w-4 text-blue-400" />
+                <MapPin className="h-4 w-4 text-[#ff5722]" />
                 <span className="text-gray-400">Colombo, Sri Lanka</span>
               </div>
             </div>
 
             {/* Social Media */}
             <div className="flex space-x-3 mt-6">
-              <Link href="#" className="bg-gray-800 p-2 rounded-lg hover:bg-blue-600 transition-colors">
+              <Link href="#" className="bg-gray-800 p-2 rounded-lg hover:bg-[#ff5722] transition-colors">
                 <Facebook className="h-4 w-4" />
               </Link>
-              <Link href="#" className="bg-gray-800 p-2 rounded-lg hover:bg-blue-600 transition-colors">
+              <Link href="#" className="bg-gray-800 p-2 rounded-lg hover:bg-[#ff5722] transition-colors">
                 <Twitter className="h-4 w-4" />
               </Link>
               <Link href="#" className="bg-gray-800 p-2 rounded-lg hover:bg-pink-600 transition-colors">

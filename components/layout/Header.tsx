@@ -40,7 +40,7 @@ export function Header() {
   };
   return (
     <>
-      <header className="bg-white shadow-sm border-b sticky top-0 z-40">
+      <header className="bg-[#f5f0e8] shadow-sm border-b border-[#d4c4a8] sticky top-0 z-40">
         {/* Main Header */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
@@ -69,7 +69,7 @@ export function Header() {
                   placeholder="Search for products, brands, and more..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full px-4 py-2 pl-10 pr-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2 pl-10 pr-4 border border-[#d4c4a8] rounded-lg focus:ring-2 focus:ring-[#ff5722] focus:border-transparent bg-white"
                 />
                 <button
                   type="submit"
@@ -83,7 +83,7 @@ export function Header() {
             {/* Right Side Icons */}
             <div className="flex items-center space-x-2">
               {/* Help - Desktop */}
-              <Link href="/help" className="hidden md:flex items-center space-x-1 px-3 py-2 text-gray-700 hover:text-blue-600 transition-colors">
+              <Link href="/help" className="hidden md:flex items-center space-x-1 px-3 py-2 text-gray-700 hover:text-[#ff5722] transition-colors">
                 <HelpCircle className="w-5 h-5" />
                 <span className="text-sm font-medium">Help</span>
               </Link>
@@ -120,7 +120,7 @@ export function Header() {
                   <ShoppingCart className="w-6 h-6" />
                   <span className="hidden sm:block text-sm">Cart</span>
                   {itemCount > 0 && (
-                    <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                    <span className="absolute -top-1 -right-1 bg-[#ff5722] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                       {itemCount}
                     </span>
                   )}
@@ -146,7 +146,7 @@ export function Header() {
               <div className="relative">
                 <button
                   onClick={() => setIsCategoriesOpen(!isCategoriesOpen)}
-                  className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                  className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-[#ff5722] to-[#e64a19] text-white rounded-lg hover:from-[#e64a19] hover:to-[#d84315] transition-colors font-medium"
                 >
                   <AlignJustify className="w-5 h-5" />
                   <span>All Categories</span>
@@ -166,7 +166,7 @@ export function Header() {
                           key={category.id}
                           href={`/category/${category.slug}`}
                           onClick={() => setIsCategoriesOpen(false)}
-                          className="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
+                          className="block px-4 py-2 text-gray-700 hover:bg-orange-50 hover:text-[#ff5722] transition-colors"
                         >
                           {category.name}
                         </Link>
@@ -181,7 +181,7 @@ export function Header() {
                 <Link
                   key={category.id}
                   href={`/category/${category.slug}`}
-                  className="text-gray-700 hover:text-blue-600 font-medium transition-colors whitespace-nowrap"
+                  className="text-gray-700 hover:text-[#ff5722] font-medium transition-colors whitespace-nowrap"
                 >
                   {category.name}
                 </Link>
@@ -201,7 +201,7 @@ export function Header() {
                   placeholder="Search products..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full px-4 py-2 pl-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2 pl-10 border border-[#d4c4a8] rounded-lg focus:ring-2 focus:ring-[#ff5722] focus:border-transparent bg-white"
                 />
                 <button
                   type="submit"
@@ -216,7 +216,7 @@ export function Header() {
                 <Link
                   key={category.id}
                   href={`/category/${category.slug}`}
-                  className="block py-2 text-gray-700 hover:text-blue-600 font-medium"
+                  className="block py-2 text-gray-700 hover:text-[#ff5722] font-medium"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {category.name}
@@ -224,13 +224,13 @@ export function Header() {
               ))}
 
               {/* Mobile Account Links */}
-              <div className="border-t border-gray-200 pt-2 mt-2">
+              <div className="border-t border-[#d4c4a8] pt-2 mt-2">
                 <div className="py-2">
                   <AuthButton />
                 </div>
                 <Link
                   href="#"
-                  className="block py-2 text-gray-700 hover:text-blue-600"
+                  className="block py-2 text-gray-700 hover:text-[#ff5722]"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   <WatchlistDrawer>
@@ -239,7 +239,7 @@ export function Header() {
                 </Link>
                 <Link
                   href="/help"
-                  className="block py-2 text-gray-700 hover:text-blue-600"
+                  className="block py-2 text-gray-700 hover:text-[#ff5722]"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Help & Support

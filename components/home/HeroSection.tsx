@@ -61,7 +61,7 @@ export function HeroSection() {
   };
 
   return (
-    <section className="relative h-[500px] md:h-[600px] lg:h-[700px] overflow-hidden bg-gradient-to-r from-blue-900 to-purple-900">
+    <section className="relative h-[500px] md:h-[600px] lg:h-[700px] overflow-hidden bg-gradient-to-r from-[#8B4513] to-[#D2691E]">
       {/* Background Images */}
       {heroSlides.map((slide, index) => (
         <div
@@ -103,9 +103,9 @@ export function HeroSection() {
               </div>
 
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button 
-                  size="lg" 
-                  className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white px-8 py-3 text-lg font-semibold"
+                <Button
+                  size="lg"
+                  className="bg-gradient-to-r from-[#ff5722] to-[#e64a19] hover:from-[#e64a19] hover:to-[#d84315] text-white px-8 py-3 text-lg font-semibold"
                 >
                   {heroSlides[currentSlide].cta}
                 </Button>
@@ -125,8 +125,8 @@ export function HeroSection() {
               <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-2xl">
                 <h3 className="text-2xl font-bold text-gray-900 mb-6">Why Choose SIBN?</h3>
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="text-center p-4 bg-blue-50 rounded-lg">
-                    <div className="text-2xl font-bold text-blue-600">50K+</div>
+                  <div className="text-center p-4 bg-orange-50 rounded-lg">
+                    <div className="text-2xl font-bold text-[#ff5722]">50K+</div>
                     <div className="text-sm text-gray-600">Active Listings</div>
                   </div>
                   <div className="text-center p-4 bg-green-50 rounded-lg">
@@ -134,11 +134,11 @@ export function HeroSection() {
                     <div className="text-sm text-gray-600">Happy Users</div>
                   </div>
                   <div className="text-center p-4 bg-orange-50 rounded-lg">
-                    <div className="text-2xl font-bold text-orange-600">24/7</div>
+                    <div className="text-2xl font-bold text-[#ff5722]">24/7</div>
                     <div className="text-sm text-gray-600">Support</div>
                   </div>
-                  <div className="text-center p-4 bg-purple-50 rounded-lg">
-                    <div className="text-2xl font-bold text-purple-600">100%</div>
+                  <div className="text-center p-4 bg-orange-50 rounded-lg">
+                    <div className="text-2xl font-bold text-[#ff5722]">100%</div>
                     <div className="text-sm text-gray-600">Verified</div>
                   </div>
                 </div>
