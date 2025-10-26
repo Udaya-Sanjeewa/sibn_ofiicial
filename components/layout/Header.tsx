@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Search, ShoppingCart, Menu, X, User, Heart, HelpCircle, AlignJustify, ChevronDown } from 'lucide-react';
 import { useCart } from '@/hooks/useCart';
@@ -45,8 +46,14 @@ export function Header() {
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
             <Link href="/" className="flex items-center space-x-2">
-              <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-                <ShoppingCart className="w-6 h-6 text-white" />
+              <div className="w-10 h-10 relative">
+                <Image
+                  src="/Logo.jpeg"
+                  alt="SIBN Ecommerce Logo"
+                  width={40}
+                  height={40}
+                  className="rounded-lg object-cover"
+                />
               </div>
               <div>
                 <h1 className="text-xl font-bold text-gray-900">SIBN Ecommerce</h1>
