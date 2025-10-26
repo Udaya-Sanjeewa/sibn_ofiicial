@@ -1,9 +1,10 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useSearchParams } from 'next/navigation';
 import { getProductsByCategory, getCategories } from '@/lib/products';
 import { ProductGrid } from '@/components/category/ProductGrid';
+import { CategoryFilters } from '@/components/category/CategoryFilters';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Grid2x2 as Grid, List } from 'lucide-react';
@@ -11,15 +12,23 @@ import type { Product, Category } from '@/types';
 
 export default function CategoryPage() {
   const params = useParams();
+  const searchParams = useSearchParams();
   const slug = params.slug as string;
 
   const [category, setCategory] = useState<Category | null>(null);
   const [products, setProducts] = useState<Product[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [sortBy, setSortBy] = useState('newest');
 
   useEffect(() => {
     loadData();
   }, [slug]);
+
+  useEffect(() => {
+    applyFiltersAndSort();
+  }, [products, searchParams, sortBy]);
 
   const loadData = async () => {
     const categories = await getCategories();
@@ -32,6 +41,59 @@ export default function CategoryPage() {
     }
 
     setIsLoading(false);
+  };
+
+  const applyFiltersAndSort = () => {
+    let filtered = [...products];
+
+    // Apply search filter
+    const search = searchParams.get('search');
+    if (search) {
+      filtered = filtered.filter(p =>
+        p.title.toLowerCase().includes(search.toLowerCase()) ||
+        p.description.toLowerCase().includes(search.toLowerCase())
+      );
+    }
+
+    // Apply condition filter
+    const conditions = searchParams.get('conditions')?.split(',').filter(Boolean);
+    if (conditions && conditions.length > 0) {
+      filtered = filtered.filter(p => conditions.includes(p.condition));
+    }
+
+    // Apply price range filter
+    const minPrice = parseInt(searchParams.get('minPrice') || '0');
+    const maxPrice = parseInt(searchParams.get('maxPrice') || '1000000');
+    filtered = filtered.filter(p => p.price >= minPrice && p.price <= maxPrice);
+
+    // Apply location filter
+    const location = searchParams.get('location');
+    if (location) {
+      filtered = filtered.filter(p => p.location === location);
+    }
+
+    // Apply sorting
+    switch (sortBy) {
+      case 'price-low':
+        filtered.sort((a, b) => a.price - b.price);
+        break;
+      case 'price-high':
+        filtered.sort((a, b) => b.price - a.price);
+        break;
+      case 'popular':
+        filtered.sort((a, b) => (b.seller.rating || 0) - (a.seller.rating || 0));
+        break;
+      case 'newest':
+      default:
+        filtered.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        break;
+    }
+
+    setFilteredProducts(filtered);
+  };
+
+  const filters = {
+    condition: ['new', 'used', 'refurbished']
   };
 
   if (isLoading) {
@@ -66,7 +128,7 @@ export default function CategoryPage() {
             </p>
             <div className="flex flex-wrap justify-center gap-4 text-sm">
               <Badge variant="secondary" className="bg-white/20 text-white border-0">
-                {products.length} Products Available
+                {filteredProducts.length} Products Available
               </Badge>
               <Badge variant="secondary" className="bg-white/20 text-white border-0">
                 Verified Sellers
@@ -81,12 +143,18 @@ export default function CategoryPage() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex flex-col lg:flex-row gap-8">
+          {/* Filters Sidebar */}
+          <div className="lg:w-64 flex-shrink-0">
+            <CategoryFilters categorySlug={slug} filters={filters} />
+          </div>
+
+          {/* Main Content */}
           <div className="flex-1">
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
                   <h2 className="text-lg font-semibold text-gray-900">
-                    {products.length} {category.name} Found
+                    {filteredProducts.length} {category.name} Found
                   </h2>
                   <p className="text-sm text-gray-600">
                     Showing results for {category.name.toLowerCase()} in Sri Lanka
@@ -96,22 +164,28 @@ export default function CategoryPage() {
                 <div className="flex items-center gap-3">
                   <div className="flex items-center border border-gray-300 rounded-lg">
                     <Button
-                      variant="ghost"
+                      variant={viewMode === 'grid' ? 'default' : 'ghost'}
                       size="sm"
                       className="rounded-r-none border-r"
+                      onClick={() => setViewMode('grid')}
                     >
                       <Grid className="h-4 w-4" />
                     </Button>
                     <Button
-                      variant="ghost"
+                      variant={viewMode === 'list' ? 'default' : 'ghost'}
                       size="sm"
                       className="rounded-l-none"
+                      onClick={() => setViewMode('list')}
                     >
                       <List className="h-4 w-4" />
                     </Button>
                   </div>
 
-                  <select className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                  <select
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value)}
+                    className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  >
                     <option value="newest">Newest First</option>
                     <option value="price-low">Price: Low to High</option>
                     <option value="price-high">Price: High to Low</option>
@@ -121,9 +195,9 @@ export default function CategoryPage() {
               </div>
             </div>
 
-            <ProductGrid products={products} />
+            <ProductGrid products={filteredProducts} viewMode={viewMode} />
 
-            {products.length > 0 && (
+            {filteredProducts.length > 0 && (
               <div className="text-center mt-8">
                 <Button variant="outline" size="lg" className="px-8">
                   Load More Products
