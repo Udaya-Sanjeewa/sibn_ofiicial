@@ -59,7 +59,7 @@ export function AuthButton() {
         <Link href="/auth/signup">
           <Button
             size="sm"
-            className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white"
+            className="bg-gradient-to-r from-Orange-600 to-yellow-600 hover:from-blue-700 hover:to-purple-700 text-white"
           >
             Sign Up
           </Button>
