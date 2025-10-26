@@ -246,9 +246,11 @@ export default function OrdersPage() {
                   </div>
 
                   <div className="flex gap-2 mt-6">
-                    <Button variant="outline" size="sm">
-                      Track Order
-                    </Button>
+                    <Link href={`/orders/${order.id}/track`}>
+                      <Button variant="outline" size="sm">
+                        Track Order
+                      </Button>
+                    </Link>
                     {order.status === 'delivered' && (
                       <Button variant="outline" size="sm">
                         Leave Review

@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Search, ShoppingCart, Menu, X, User, Heart, HelpCircle, Package, AlignJustify, ChevronDown } from 'lucide-react';
+import { Search, ShoppingCart, Menu, X, User, Heart, HelpCircle, AlignJustify, ChevronDown } from 'lucide-react';
 import { useCart } from '@/hooks/useCart';
 import { useWatchlist } from '@/hooks/useWatchlist';
 import { CartDrawer } from '@/components/cart/CartDrawer';
@@ -75,12 +75,6 @@ export function Header() {
 
             {/* Right Side Icons */}
             <div className="flex items-center space-x-2">
-              {/* Track Order - Desktop */}
-              <Link href="/track-order" className="hidden md:flex items-center space-x-1 px-3 py-2 text-gray-700 hover:text-blue-600 transition-colors">
-                <Package className="w-5 h-5" />
-                <span className="text-sm font-medium">Track Order</span>
-              </Link>
-
               {/* Help - Desktop */}
               <Link href="/help" className="hidden md:flex items-center space-x-1 px-3 py-2 text-gray-700 hover:text-blue-600 transition-colors">
                 <HelpCircle className="w-5 h-5" />
@@ -235,13 +229,6 @@ export function Header() {
                   <WatchlistDrawer>
                     <span>Watchlist ({watchlistCount})</span>
                   </WatchlistDrawer>
-                </Link>
-                <Link
-                  href="/track-order"
-                  className="block py-2 text-gray-700 hover:text-blue-600"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Track Order
                 </Link>
                 <Link
                   href="/help"
