@@ -235,7 +235,7 @@ export function FeaturedProducts() {
           <Button
             variant="outline"
             size="lg"
-            className="px-8 py-3 border-2 hover:bg-blue-50 hover:border-blue-300 transition-all duration-300"
+            className="px-8 py-3 border-2 bg-gradient-to-r from-[#ff5722] to-[#e64a19] text-white rounded-lg hover:from-[#e64a19] hover:to-[#d84315] transition-all duration-300"
           >
             Load More Products
           </Button>
