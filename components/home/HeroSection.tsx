@@ -240,7 +240,7 @@ export function HeroSection() {
   const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length);
 
   return (
-    <section className="relative h-[380px] md:h-[460px] lg:h-[520px] overflow-hidden bg-gradient-to-r from-[#8B4513] to-[#D2691E]">
+    <section className="relative h-[380px] md:h-[460px] lg:h-[460px] overflow-hidden bg-gradient-to-r from-[#8B4513] to-[#D2691E]">
       {/* Background Images */}
       {heroSlides.map((slide, index) => (
         <div
