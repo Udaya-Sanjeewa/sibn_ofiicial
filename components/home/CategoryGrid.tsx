@@ -94,7 +94,7 @@ export function CategoryGrid() {
         <div className="text-center mt-12">
           <Link
             href="/categories"
-            className="inline-flex items-center px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+            className="inline-flex items-center px-8 py-3 bg-gradient-to-r from-[#ff5722] to-[#e64a19] text-white rounded-lg hover:from-[#e64a19] hover:to-[#d84315] transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
           >
             View All Categories
             <ArrowRight className="h-5 w-5 ml-2" />
