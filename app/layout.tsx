@@ -23,7 +23,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <title>SIBN Ecommerce - Sri Lanka&apos;s Largest Online Marketplace</title>
+        <title>Missionline Ecommerce - Sri Lanka&apos;s Largest Online Marketplace</title>
         <meta name="description" content="Buy and sell everything from cars to electronics, property to fashion. Join millions of users on Sri Lanka's most trusted marketplace." />
         <link rel="icon" href="/favicon.ico" />
         <meta name="theme-color" content="#1e40af" />

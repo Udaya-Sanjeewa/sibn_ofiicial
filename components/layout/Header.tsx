@@ -49,14 +49,14 @@ export function Header() {
               <div className="w-10 h-10 relative">
                 <Image
                   src="/Logo.jpeg"
-                  alt="SIBN Ecommerce Logo"
+                  alt="Missionline Ecommerce Logo"
                   width={40}
                   height={40}
                   className="rounded-lg object-cover"
                 />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-gray-900">SIBN Ecommerce</h1>
+                <h1 className="text-xl font-bold text-gray-900">Missionline Ecommerce</h1>
                 <p className="text-xs text-gray-500">Your Marketplace</p>
               </div>
             </Link>

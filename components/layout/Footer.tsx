@@ -39,7 +39,7 @@ export function Footer() {
       ]
     },
     {
-      title: 'About SIBN Ecommerce',
+      title: 'About Missionline Ecommerce',
       links: [
         { name: 'About Us', href: '/about' },
         { name: 'Careers', href: '/careers' },
@@ -80,7 +80,7 @@ export function Footer() {
           <div className="lg:col-span-1">
             <div className="flex items-center mb-4">
               <div className="bg-gradient-to-r from-[#ff5722] to-[#e64a19] text-white px-3 py-2 rounded-lg font-bold text-xl">
-                SIBN Ecommerce
+                Missionline Ecommerce
               </div>
             </div>
             <p className="text-gray-400 mb-6 text-sm leading-relaxed">
@@ -95,7 +95,7 @@ export function Footer() {
               </div>
               <div className="flex items-center gap-2">
                 <Mail className="h-4 w-4 text-[#ff5722]" />
-                <span className="text-gray-400">info@sibn-ecommerce.lk</span>
+                <span className="text-gray-400">info@Missionline-ecommerce.lk</span>
               </div>
               <div className="flex items-center gap-2">
                 <MapPin className="h-4 w-4 text-[#ff5722]" />
@@ -146,7 +146,7 @@ export function Footer() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="text-gray-400 text-sm mb-4 md:mb-0">
-              © {currentYear} SIBN Ecommerce. All rights reserved.
+              © {currentYear} Missionline Ecommerce. All rights reserved.
             </div>
             <div className="flex flex-wrap justify-center gap-6 text-sm">
               <Link href="/terms" className="text-gray-400 hover:text-white transition-colors">
